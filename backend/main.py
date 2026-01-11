@@ -37,7 +37,7 @@ app.add_middleware(
 
 # 定数
 UPLOAD_DIR = "uploads"
-TEMPLATE_PATH = "templates/template.xlsx"
+TEMPLATE_PATH = "エクセルサンプル.xlsx"
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
 # アップロードディレクトリの作成
@@ -72,7 +72,7 @@ def health_check():
         "status": "healthy" if template_exists else "degraded",
         "template_exists": template_exists,
         "template_path": TEMPLATE_PATH,
-        "message": "OK" if template_exists else "テンプレートファイルが見つかりません。create_template.pyを実行してください。"
+        "message": "OK" if template_exists else "エクセルサンプル.xlsxファイルが見つかりません。backend/ディレクトリに配置してください。"
     }
 
 
@@ -114,7 +114,7 @@ async def convert_pdf_to_excel(file: UploadFile = File(...)):
     if not os.path.exists(TEMPLATE_PATH):
         raise HTTPException(
             status_code=500,
-            detail="テンプレートファイルが見つかりません。バックエンドのセットアップを完了してください。"
+            detail="エクセルサンプル.xlsxファイルが見つかりません。backend/ディレクトリに配置してください。"
         )
 
     # 一時ファイル名の生成
