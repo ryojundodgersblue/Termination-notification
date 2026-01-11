@@ -6,6 +6,7 @@ Excel書き込みモジュール
 import os
 from typing import Dict, Any
 from openpyxl import load_workbook
+from openpyxl.cell.cell import MergedCell
 
 
 # セルマッピング定義
@@ -202,7 +203,20 @@ def write_data_to_sheet(wb, data: Dict[str, Any], mapping: Dict[str, tuple], cat
                 if item == '現金及び預金':
                     actual_value = value // 1000
 
-                ws[cell_address] = actual_value
+                # セルへの書き込み（マージセル対応）
+                cell = ws[cell_address]
+                if isinstance(cell, MergedCell):
+                    # マージセルの場合、左上のセルに書き込む
+                    for merged_range in ws.merged_cells.ranges:
+                        if cell.coordinate in merged_range:
+                            # 左上セルに書き込み
+                            top_left_cell = ws.cell(merged_range.min_row, merged_range.min_col)
+                            top_left_cell.value = actual_value
+                            break
+                else:
+                    # 通常セルの場合
+                    ws[cell_address].value = actual_value
+
                 write_count += 1
 
                 # ログ出力（現金預金の場合は変換前後を表示）
