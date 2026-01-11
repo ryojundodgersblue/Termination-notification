@@ -31,7 +31,7 @@ function App() {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = '決算報告書_変換結果.xlsx'
+      a.download = '事業年度終了届出書.xlsx'
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
