@@ -9,7 +9,7 @@ from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Protecti
 from copy import copy
 
 
-def create_template(source_path='エクセルサンプル.xlsx', output_path='backend/templates/template.xlsx'):
+def create_template(source_path='エクセルサンプル.xlsx', output_path='templates/template.xlsx'):
     """
     元のExcelファイルを完全に複製してテンプレートを作成
 
@@ -109,8 +109,7 @@ if __name__ == "__main__":
     if success:
         print("\n✓ テンプレートファイルが正常に作成されました")
         print("  次のステップ: バックエンドを起動してください")
-        print("  cd backend")
         print("  uvicorn main:app --reload --port 8000")
     else:
         print("\n✗ テンプレート作成に失敗しました")
-        print("  「エクセルサンプル.xlsx」をプロジェクトルートに配置してから再実行してください")
+        print("  「エクセルサンプル.xlsx」を backend/ ディレクトリに配置してから再実行してください")
