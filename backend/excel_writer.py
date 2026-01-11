@@ -196,9 +196,20 @@ def write_data_to_sheet(wb, data: Dict[str, Any], mapping: Dict[str, tuple], cat
 
             try:
                 ws = wb[sheet_name]
-                ws[cell_address] = value
+
+                # 現金預金の場合は下3桁を除去（1000で割る）
+                actual_value = value
+                if item == '現金及び預金':
+                    actual_value = value // 1000
+
+                ws[cell_address] = actual_value
                 write_count += 1
-                print(f"  {category_name}: {item} = {value:,} -> {sheet_name}!{cell_address}")
+
+                # ログ出力（現金預金の場合は変換前後を表示）
+                if item == '現金及び預金':
+                    print(f"  {category_name}: {item} = {value:,} -> {actual_value:,} (下3桁除去) -> {sheet_name}!{cell_address}")
+                else:
+                    print(f"  {category_name}: {item} = {value:,} -> {sheet_name}!{cell_address}")
             except Exception as e:
                 print(f"  エラー: {item}の書き込みに失敗 ({sheet_name}!{cell_address}): {str(e)}")
         else:
