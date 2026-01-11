@@ -160,9 +160,9 @@ async def convert_pdf_to_excel(file: UploadFile = File(...)):
         return FileResponse(
             excel_path,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            filename="決算報告書_変換結果.xlsx",
+            filename="事業年度終了届出書.xlsx",
             headers={
-                "Content-Disposition": "attachment; filename*=UTF-8''%E6%B1%BA%E7%AE%97%E5%A0%B1%E5%91%8A%E6%9B%B8_%E5%A4%89%E6%8F%9B%E7%B5%90%E6%9E%9C.xlsx"
+                "Content-Disposition": "attachment; filename*=UTF-8''%E4%BA%8B%E6%A5%AD%E5%B9%B4%E5%BA%A6%E7%B5%82%E4%BA%86%E5%B1%8A%E5%87%BA%E6%9B%B8.xlsx"
             }
         )
 
