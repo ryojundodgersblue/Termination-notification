@@ -12,7 +12,7 @@ from openpyxl.cell.cell import MergedCell
 # セルマッピング定義
 # シート「１５ (１)」- 貸借対照表（資産の部）
 BALANCE_SHEET_ASSETS_MAP = {
-    '現金及び預金': ('１５ (１)', 'T12'),
+    '現金及び預金': ('１５ (１)', 'AE12'),
     '売掛金': ('１５ (１)', 'T14'),  # 完成工事未収入金として
     '未成工事支出金': ('１５ (１)', 'T16'),
     '材料貯蔵品': ('１５ (１)', 'T17'),
@@ -205,17 +205,24 @@ def write_data_to_sheet(wb, data: Dict[str, Any], mapping: Dict[str, tuple], cat
 
                 # セルへの書き込み（マージセル対応）
                 cell = ws[cell_address]
+                target_cell = None
+
                 if isinstance(cell, MergedCell):
                     # マージセルの場合、左上のセルに書き込む
                     for merged_range in ws.merged_cells.ranges:
                         if cell.coordinate in merged_range:
                             # 左上セルに書き込み
-                            top_left_cell = ws.cell(merged_range.min_row, merged_range.min_col)
-                            top_left_cell.value = actual_value
+                            target_cell = ws.cell(merged_range.min_row, merged_range.min_col)
+                            target_cell.value = actual_value
                             break
                 else:
                     # 通常セルの場合
-                    ws[cell_address].value = actual_value
+                    target_cell = ws[cell_address]
+                    target_cell.value = actual_value
+
+                # 現金及び預金の場合、カンマ区切りフォーマットを適用
+                if item == '現金及び預金' and target_cell:
+                    target_cell.number_format = '#,##0'
 
                 write_count += 1
 
