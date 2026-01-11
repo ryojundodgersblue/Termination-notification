@@ -77,13 +77,27 @@ def create_template(source_path='エクセルサンプル.xlsx', output_path='te
             for merged_cell_range in source_ws.merged_cells.ranges:
                 template_ws.merge_cells(str(merged_cell_range))
 
-            # 3. 列幅をコピー
+            # 3. 列幅をコピー（すべての列プロパティを完全にコピー）
             for col_letter, col_dim in source_ws.column_dimensions.items():
-                template_ws.column_dimensions[col_letter].width = col_dim.width
+                new_col_dim = template_ws.column_dimensions[col_letter]
+                new_col_dim.width = col_dim.width
+                new_col_dim.hidden = col_dim.hidden
+                new_col_dim.auto_size = col_dim.auto_size
+                new_col_dim.bestFit = col_dim.bestFit
+                new_col_dim.collapsed = col_dim.collapsed
+                new_col_dim.outline_level = col_dim.outline_level
+                if col_dim.style:
+                    new_col_dim.style = col_dim.style
 
-            # 4. 行高をコピー
+            # 4. 行高をコピー（すべての行プロパティを完全にコピー）
             for row_num, row_dim in source_ws.row_dimensions.items():
-                template_ws.row_dimensions[row_num].height = row_dim.height
+                new_row_dim = template_ws.row_dimensions[row_num]
+                new_row_dim.height = row_dim.height
+                new_row_dim.hidden = row_dim.hidden
+                new_row_dim.collapsed = row_dim.collapsed
+                new_row_dim.outline_level = row_dim.outline_level
+                if row_dim.style:
+                    new_row_dim.style = row_dim.style
 
             # 5. シートのプロパティをコピー
             template_ws.sheet_properties.tabColor = source_ws.sheet_properties.tabColor
