@@ -258,7 +258,7 @@ if __name__ == "__main__":
         'equity_change': {},
     }
 
-    template_path = 'templates/template.xlsx'
+    template_path = 'エクセルサンプル.xlsx'
     output_path = 'uploads/test_output.xlsx'
 
     try:

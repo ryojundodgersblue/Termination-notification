@@ -37,10 +37,8 @@ pdf-to-excel-converter/
 │   ├── main.py                    # FastAPI メインアプリケーション
 │   ├── pdf_parser.py              # PDF解析ロジック
 │   ├── excel_writer.py            # Excel書き込みロジック
-│   ├── create_template.py         # テンプレート作成スクリプト
 │   ├── requirements.txt           # Python依存関係
-│   ├── templates/
-│   │   └── template.xlsx          # Excelテンプレート（自動生成）
+│   ├── エクセルサンプル.xlsx       # Excelテンプレート（要配置）
 │   └── uploads/                   # 一時アップロードフォルダ
 ├── frontend/
 │   ├── src/
@@ -54,7 +52,6 @@ pdf-to-excel-converter/
 │   ├── package.json
 │   ├── vite.config.js
 │   └── index.html
-├── エクセルサンプル.xlsx          # テンプレート元ファイル（要配置）
 └── README.md
 ```
 
@@ -75,12 +72,13 @@ cd pdf-to-excel-converter
 
 ### 2. Excelサンプルファイルの配置
 
-**重要**: テンプレート作成に必要な「エクセルサンプル.xlsx」をプロジェクトルートに配置してください。
+**重要**: テンプレートとして使用する「エクセルサンプル.xlsx」を backend/ ディレクトリに配置してください。
 
 ```bash
-# プロジェクトルートに配置
+# backend/ ディレクトリに配置
 pdf-to-excel-converter/
-└── エクセルサンプル.xlsx  ← ここに配置
+└── backend/
+    └── エクセルサンプル.xlsx  ← ここに配置
 ```
 
 ### 3. バックエンドのセットアップ
@@ -99,14 +97,6 @@ source venv/bin/activate
 
 # 依存関係のインストール
 pip install -r requirements.txt
-
-# テンプレートファイルの作成（初回のみ）
-python create_template.py
-```
-
-**成功メッセージ:**
-```
-✓ テンプレート作成完了: backend/templates/template.xlsx
 ```
 
 ### 4. フロントエンドのセットアップ
@@ -218,12 +208,12 @@ PDFをExcelに変換
 
 **症状:**
 ```
-エラー: テンプレートファイルが見つかりません
+エラー: エクセルサンプル.xlsxファイルが見つかりません
 ```
 
 **解決方法:**
-1. 「エクセルサンプル.xlsx」がプロジェクトルートに配置されているか確認
-2. `python create_template.py` を実行してテンプレートを作成
+1. 「エクセルサンプル.xlsx」が backend/ ディレクトリに配置されているか確認
+2. ファイル名が正確に「エクセルサンプル.xlsx」であることを確認
 
 ### PDFからデータを抽出できませんでした
 
