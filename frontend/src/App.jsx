@@ -8,6 +8,9 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // API URLを環境変数から取得（デフォルトは本番環境の相対パス）
+  const API_URL = import.meta.env.VITE_API_URL || '/api/convert'
+
   const handleFileUpload = async (file) => {
     setLoading(true)
     setError(null)
@@ -16,7 +19,7 @@ function App() {
     formData.append('file', file)
 
     try {
-      const response = await fetch('http://localhost:8000/api/convert', {
+      const response = await fetch(API_URL, {
         method: 'POST',
         body: formData,
       })
