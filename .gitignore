@@ -76,4 +76,5 @@ Thumbs.db
 
 # Output files
 *.xlsx
+!api/エクセルサンプル.xlsx
 !backend/templates/.gitkeep
