@@ -3,12 +3,13 @@
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/*.py": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "memory": 1024
     }
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
       "destination": "/api/index.py"
     }
   ]

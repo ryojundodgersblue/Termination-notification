@@ -60,13 +60,13 @@ def read_root():
         "status": "running",
         "environment": "vercel" if os.getenv("VERCEL") else "local",
         "endpoints": {
-            "convert": "/api/convert (POST)",
-            "health": "/api/health (GET)"
+            "convert": "/convert (POST)",
+            "health": "/health (GET)"
         }
     }
 
 
-@app.get("/api/health")
+@app.get("/health")
 def health_check():
     """
     ヘルスチェックエンドポイント
@@ -82,7 +82,7 @@ def health_check():
     }
 
 
-@app.post("/api/convert")
+@app.post("/convert")
 async def convert_pdf_to_excel(file: UploadFile = File(...)):
     """
     PDFをExcelに変換するメインエンドポイント
@@ -190,7 +190,7 @@ async def convert_pdf_to_excel(file: UploadFile = File(...)):
                 print(f"一時ファイル削除エラー: {str(e)}")
 
 
-@app.delete("/api/cleanup")
+@app.delete("/cleanup")
 def cleanup_temp_files():
     """
     一時ファイルをクリーンアップ（管理用）
