@@ -7,6 +7,20 @@
 - **フロントエンド**: Vercel（無料枠利用可能、自動デプロイ）
 - **バックエンド**: Render（無料枠利用可能、Pythonサポート良好）
 
+## ⚠️ 重要：環境変数の設定
+
+**環境変数の設定ミスが最も多い原因です。必ず以下を確認してください：**
+
+- ✅ Vercelの `VITE_API_URL` には **`/api/convert` まで含める**
+  - 正: `https://your-backend.onrender.com/api/convert`
+  - 誤: `https://your-backend.onrender.com`
+
+- ✅ Renderの `FRONTEND_URL` には **`https://` を含める**
+  - 正: `https://your-frontend.vercel.app`
+  - 誤: `your-frontend.vercel.app`
+
+👉 **詳細は [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) を参照してください**
+
 ## 前提条件
 
 - GitHubアカウント
@@ -45,15 +59,22 @@
 | **Build Command** | `pip install -r requirements.txt` |
 | **Start Command** | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
 
-### 1.4 環境変数の設定
+### 1.4 環境変数の設定（重要）
 
 "Advanced" セクションを展開し、以下の環境変数を追加：
 
-```
-FRONTEND_URL=https://your-app.vercel.app
-```
+**Key**: `FRONTEND_URL`
 
-> **注意**: `your-app.vercel.app` は後でVercelでフロントエンドをデプロイした後のURLに置き換えます。
+**Value**: `https://your-app.vercel.app`
+
+> **⚠️ 重要**:
+> - `your-app.vercel.app` は後でVercelでフロントエンドをデプロイした後のURLに置き換えます
+> - **必ず `https://` を含めてください**
+> - 例: `https://termination-notification.vercel.app`
+> - ❌ 間違い: `termination-notification.vercel.app`（https:// が抜けている）
+> - ❌ 間違い: `https://termination-notification.vercel.app/`（末尾に / がある）
+>
+> **最初の設定時**: Vercelのデプロイが完了していない場合は、仮のURL（例: `https://placeholder.vercel.app`）を入れておき、手順3.1で正しいURLに更新してください。
 
 ### 1.5 プランの選択
 
@@ -116,15 +137,21 @@ https://your-backend.onrender.com/health
 - "Root Directory" は **空欄のまま**（プロジェクトルート）
 - または明示的に `.` を指定
 
-### 2.4 環境変数の設定
+### 2.4 環境変数の設定（超重要！）
 
 "Environment Variables" セクションで以下を追加：
 
-```
-VITE_API_URL=https://your-backend.onrender.com/api/convert
-```
+**Key**: `VITE_API_URL`
 
-> **重要**: `your-backend.onrender.com` は、手順1.6でメモしたRenderのバックエンドURLに置き換えます。
+**Value**: `https://your-backend.onrender.com/api/convert`
+
+**Environments**: Production, Preview, Development（すべてにチェック）
+
+> **⚠️ 超重要**:
+> - `your-backend.onrender.com` は、手順1.6でメモしたRenderのバックエンドURLに置き換えます
+> - **必ず `/api/convert` まで含めてください**
+> - 例: `https://termination-notification.onrender.com/api/convert`
+> - ❌ 間違い: `https://termination-notification.onrender.com`（/api/convert が抜けている）
 
 ### 2.5 デプロイ実行
 
@@ -210,6 +237,34 @@ https://your-backend.onrender.com/health
 
 ## 6. トラブルシューティング
 
+### 🚨 問題: CORS エラーが発生する
+
+**エラーメッセージ**:
+```
+Access to fetch at 'https://xxx.onrender.com/' from origin 'https://xxx.vercel.app'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present
+```
+
+**原因1**: Vercelの `VITE_API_URL` に `/api/convert` が含まれていない
+
+**解決策1**:
+1. Vercelの "Settings" → "Environment Variables" を開く
+2. `VITE_API_URL` の値を確認
+3. ✅ 正: `https://termination-notification.onrender.com/api/convert`
+4. ❌ 誤: `https://termination-notification.onrender.com`
+5. 間違っている場合は修正して保存
+6. "Deployments" タブから最新デプロイメントを "Redeploy"
+
+**原因2**: Renderの `FRONTEND_URL` 設定が間違っている
+
+**解決策2**:
+1. Renderの環境変数 `FRONTEND_URL` を確認
+2. ✅ 正: `https://termination-notification.vercel.app`
+3. ❌ 誤: `termination-notification.vercel.app`（https:// が抜けている）
+4. ❌ 誤: `https://termination-notification.vercel.app/`（末尾に / がある）
+5. VercelのURLと完全に一致しているか確認
+6. 設定変更後、サービスが再デプロイされるまで待つ（数分）
+
 ### 問題: バックエンドが応答しない
 
 **原因**: Renderの無料プランでスリープ状態になっている
@@ -217,15 +272,6 @@ https://your-backend.onrender.com/health
 **解決策**:
 - 初回アクセス時に数秒待つ
 - ヘルスチェックエンドポイントにアクセスしてウォームアップ
-
-### 問題: CORS エラーが発生する
-
-**原因**: バックエンドの `FRONTEND_URL` 設定が間違っている
-
-**解決策**:
-1. Renderの環境変数 `FRONTEND_URL` を確認
-2. VercelのURLと完全に一致しているか確認（末尾の `/` に注意）
-3. 設定変更後、サービスが再デプロイされるまで待つ
 
 ### 問題: ファイルアップロードがタイムアウトする
 
@@ -251,15 +297,26 @@ https://your-backend.onrender.com/health
 
 ### バックエンド（Render）
 
-| 変数名 | 説明 | 例 |
-|--------|------|-----|
-| `FRONTEND_URL` | フロントエンドのURL（CORS許可用） | `https://your-app.vercel.app` |
+| 変数名 | 説明 | 例 | 注意事項 |
+|--------|------|-----|---------|
+| `FRONTEND_URL` | フロントエンドのURL（CORS許可用） | `https://termination-notification.vercel.app` | ✅ `https://` を含める<br>❌ 末尾の `/` は不要 |
 
 ### フロントエンド（Vercel）
 
-| 変数名 | 説明 | 例 |
-|--------|------|-----|
-| `VITE_API_URL` | バックエンドAPIのURL | `https://your-backend.onrender.com/api/convert` |
+| 変数名 | 説明 | 例 | 注意事項 |
+|--------|------|-----|---------|
+| `VITE_API_URL` | バックエンドAPIのURL | `https://termination-notification.onrender.com/api/convert` | ✅ **`/api/convert` まで含める**（超重要）<br>✅ `https://` を含める |
+
+### ⚠️ 重要な注意事項
+
+**Vercelの環境変数設定後は必ず再デプロイが必要です**:
+1. Vercelダッシュボードの "Deployments" タブを開く
+2. 最新のデプロイメントの右側の `...` をクリック
+3. "Redeploy" を選択
+
+**Renderの環境変数設定後は自動的に再デプロイされます**（数分待つ）
+
+👉 **詳細な設定手順とトラブルシューティングは [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) を参照**
 
 ---
 
