@@ -1,0 +1,21 @@
+services:
+  # バックエンドAPI (FastAPI)
+  - type: web
+    name: pdf-to-excel-backend
+    env: python
+    region: oregon
+    plan: free
+    # backendディレクトリをルートとして使用
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: FRONTEND_URL
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    # 無料プランの制限
+    # - 750時間/月まで無料
+    # - 15分間アクティビティがないとスリープ
+    # - スリープ状態から起動に数秒かかる
