@@ -1,10 +1,6 @@
 {
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
-  "functions": {
-    "api/*.py": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
-  }
+  "cleanUrls": true,
+  "trailingSlash": false
 }

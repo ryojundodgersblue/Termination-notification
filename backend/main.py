@@ -11,6 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from pdf_parser import parse_pdf
 from excel_writer import write_to_excel
+from dotenv import load_dotenv
+
+# 環境変数を読み込み
+load_dotenv()
 
 # FastAPIアプリケーション作成
 app = FastAPI(
@@ -20,16 +24,26 @@ app = FastAPI(
 )
 
 # CORS設定（フロントエンドとの通信用）
+# 環境変数からフロントエンドURLを取得（カンマ区切りで複数指定可能）
+frontend_urls = os.getenv("FRONTEND_URL", "").split(",")
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174"
+]
+
+# 環境変数で指定されたURLを追加
+for url in frontend_urls:
+    url = url.strip()
+    if url:
+        allowed_origins.append(url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174"
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
