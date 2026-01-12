@@ -21,6 +21,7 @@
 - Vite 5.0
 - TailwindCSS 3.3
 - Axios 1.6
+- **デプロイ先**: Vercel
 
 ### バックエンド
 - Python 3.9+
@@ -28,6 +29,35 @@
 - pdfplumber 0.10 (PDF解析)
 - openpyxl 3.1 (Excel操作)
 - uvicorn 0.24 (ASGIサーバー)
+- **デプロイ先**: Render
+
+## 🚀 デプロイ方法
+
+本番環境へのデプロイ手順については、以下のドキュメントを参照してください：
+
+- 📖 **[DEPLOYMENT.md](./DEPLOYMENT.md)** - VercelとRenderへのデプロイ手順
+- 🔧 **[ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md)** - 環境変数の詳細な設定ガイド
+
+### デプロイ構成
+
+- **フロントエンド**: Vercel（無料枠あり、自動デプロイ）
+- **バックエンド**: Render（無料枠あり、Pythonサポート良好）
+
+### 環境変数（重要）
+
+デプロイ時には以下の環境変数を正しく設定してください：
+
+**Vercel（フロントエンド）**:
+```
+VITE_API_URL=https://your-backend.onrender.com/api/convert
+```
+⚠️ **必ず `/api/convert` まで含めてください**
+
+**Render（バックエンド）**:
+```
+FRONTEND_URL=https://your-frontend.vercel.app
+```
+⚠️ **必ず `https://` を含めてください**
 
 ## プロジェクト構造
 
