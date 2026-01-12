@@ -261,10 +261,10 @@ def write_data_to_sheet(wb, data: Dict[str, Any], mapping: Dict[str, tuple], cat
             try:
                 ws = wb[sheet_name]
 
-                # 現金預金の場合は下3桁を除去（1000で割る）
+                # すべての数値について下3桁を除去（1000で割る）
                 actual_value = value
-                if item == '現金及び預金':
-                    actual_value = value // 1000
+                if isinstance(value, (int, float)):
+                    actual_value = int(value // 1000)
 
                 # セルへの書き込み（マージセル対応）
                 cell = ws[cell_address]
@@ -283,17 +283,17 @@ def write_data_to_sheet(wb, data: Dict[str, Any], mapping: Dict[str, tuple], cat
                     target_cell = ws[cell_address]
                     target_cell.value = actual_value
 
-                # 現金及び預金の場合、カンマ区切りフォーマットを適用
-                if item == '現金及び預金' and target_cell:
+                # すべての数値にカンマ区切りフォーマットを適用
+                if target_cell and isinstance(value, (int, float)):
                     target_cell.number_format = '#,##0'
 
                 write_count += 1
 
-                # ログ出力（現金預金の場合は変換前後を表示）
-                if item == '現金及び預金':
+                # ログ出力（数値の場合は変換前後を表示）
+                if isinstance(value, (int, float)):
                     print(f"  {category_name}: {item} = {value:,} -> {actual_value:,} (下3桁除去) -> {sheet_name}!{cell_address}")
                 else:
-                    print(f"  {category_name}: {item} = {value:,} -> {sheet_name}!{cell_address}")
+                    print(f"  {category_name}: {item} = {value} -> {sheet_name}!{cell_address}")
             except Exception as e:
                 print(f"  エラー: {item}の書き込みに失敗 ({sheet_name}!{cell_address}): {str(e)}")
         else:
