@@ -210,3 +210,8 @@ def cleanup_temp_files():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"クリーンアップエラー: {str(e)}")
+
+
+# Vercel Serverless Functions用ハンドラー
+from mangum import Mangum
+handler = Mangum(app)
