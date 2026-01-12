@@ -214,4 +214,4 @@ def cleanup_temp_files():
 
 # Vercel Serverless Functions用ハンドラー
 from mangum import Mangum
-handler = Mangum(app, api_gateway_base_path="/api")
+handler = Mangum(app)
