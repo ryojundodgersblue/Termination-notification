@@ -25,8 +25,32 @@ function App() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || '変換に失敗しました')
+        // Content-Typeをチェックしてレスポンスタイプを判定
+        const contentType = response.headers.get('content-type')
+        let errorMessage = '変換に失敗しました'
+
+        try {
+          if (contentType && contentType.includes('application/json')) {
+            // JSONレスポンスの場合
+            const errorData = await response.json()
+            errorMessage = errorData.detail || errorMessage
+          } else {
+            // JSONでない場合（HTMLやプレーンテキスト）
+            const errorText = await response.text()
+            // 長すぎるエラーメッセージは省略
+            if (errorText.length > 200) {
+              errorMessage = `サーバーエラーが発生しました (${response.status})`
+            } else {
+              errorMessage = errorText || errorMessage
+            }
+          }
+        } catch (parseError) {
+          // パースエラーが発生した場合
+          console.error('Error parsing response:', parseError)
+          errorMessage = `サーバーエラーが発生しました (${response.status})`
+        }
+
+        throw new Error(errorMessage)
       }
 
       // Excelファイルをダウンロード
